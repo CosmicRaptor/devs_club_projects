@@ -23,19 +23,19 @@ class _MyAppState extends State<MyApp> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Enter your weight: ',
               style: TextStyle(
                 color: Colors.grey,
                 letterSpacing: 2.0
               ),
             ),
-            SizedBox(height: 10),
-            TextField(
+            const SizedBox(height: 10),
+            const TextField(
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.amberAccent)
@@ -44,6 +44,46 @@ class _MyAppState extends State<MyApp> {
               style: TextStyle(
                 color: Colors.amberAccent
               ),
+            ),
+            const SizedBox(height: 40),
+            const Text(
+              'Enter your height: ',
+              style: TextStyle(
+                  color: Colors.grey,
+                  letterSpacing: 2.0
+              ),
+            ),
+            const SizedBox(height: 10),
+            const TextField(
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.amberAccent)
+                ),
+              ),
+              style: TextStyle(
+                  color: Colors.amberAccent
+              ),
+            ),
+            const SizedBox(height: 40),
+            Center(
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.amber[600])
+                  ),
+                  onPressed: () {},
+                  child: const Text('Calculate'),
+              ),
+            ),
+            const SizedBox(height: 40),
+            const Center(
+              child: Text(
+                  'Result:',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold
+                  ),
+              )
             )
           ],
         ),
