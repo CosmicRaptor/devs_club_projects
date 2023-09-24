@@ -12,6 +12,43 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final weightController = TextEditingController();
+  final heightController = TextEditingController();
+  late double text = 0;
+  late var finalColour = Colors.red;
+  late String finalText = "None";
+  void getBMI() {
+    setState(() {
+      double height = double.parse(heightController.text)/100;   //Height in metres
+      double weight = double.parse(weightController.text);
+      text = weight/(height*height);
+      text = text.roundToDouble();
+      if (text <= 18.5) {
+        finalColour = Colors.red;
+        finalText = "Underweight";
+      }
+      else if (text > 18.5 && text < 25) {
+        finalColour = Colors.green;
+        finalText = "Healthy";
+      }
+      else if (text >= 25) {
+        finalColour = Colors.red;
+        finalText = "Overweight";
+      }
+      else {
+        finalColour = Colors.red;
+        finalText = "Error";
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    weightController.dispose();
+    heightController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,39 +65,41 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Enter your weight: ',
+              'Enter your weight(kg): ',
               style: TextStyle(
                 color: Colors.grey,
                 letterSpacing: 2.0
               ),
             ),
             const SizedBox(height: 10),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: weightController,
+              decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.amberAccent)
                 ),
               ),
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.amberAccent
               ),
             ),
             const SizedBox(height: 40),
             const Text(
-              'Enter your height: ',
+              'Enter your height(cm): ',
               style: TextStyle(
                   color: Colors.grey,
                   letterSpacing: 2.0
               ),
             ),
             const SizedBox(height: 10),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: heightController,
+              decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.amberAccent)
                 ),
               ),
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.amberAccent
               ),
             ),
@@ -70,20 +109,32 @@ class _MyAppState extends State<MyApp> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.amber[600])
                   ),
-                  onPressed: () {},
+                  onPressed: getBMI,
                   child: const Text('Calculate'),
               ),
             ),
             const SizedBox(height: 40),
-            const Center(
-              child: Text(
+            Row(
+              children: [
+                const Text(
                   'Result:',
                   style: TextStyle(
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    fontWeight: FontWeight.bold
+                    color: Colors.white
                   ),
-              )
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  '$text $finalText',
+                  style: TextStyle(
+                    color: finalColour,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30
+                  )
+                  ,
+                )
+              ],
             )
           ],
         ),
