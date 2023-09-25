@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'tasks.dart';
+import 'task_card.dart';
 
 void main() => runApp(MaterialApp(
   home: MyApp(),
@@ -29,41 +30,11 @@ class _MyAppState extends State<MyApp> {
     Tasks(Name: 'Test task 12', Description: 'This is a test task'),
   ];
 
-  Widget taskTemplate(task) {
-    return Card(
-      margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-      child:
-        Padding(
-          padding: EdgeInsets.all(12.0),
-          child:
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  task.Name,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.grey[800]
-                  )
-                ),
-                SizedBox(height: 6.0,),
-                Text(
-                  task.Description,
-                  style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.grey[600]
-                  )
-                )
-              ],
-            ),
-        )
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[400],
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text('To-do list'),
@@ -71,7 +42,7 @@ class _MyAppState extends State<MyApp> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: taskList.map((task) => taskTemplate(task)).toList()
+          children: taskList.map((task) => TaskCard(task: task)).toList()
         ),
       )
     );
