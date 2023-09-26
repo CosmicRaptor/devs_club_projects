@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'tasks.dart';
 import 'task_card.dart';
 
@@ -29,6 +30,15 @@ class _MyAppState extends State<MyApp> {
     Tasks(Name: 'Test task 11', Description: 'This is a test task'),
     Tasks(Name: 'Test task 12', Description: 'This is a test task'),
   ];
+  final taskNameController = TextEditingController();
+  final taskDescriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    taskDescriptionController.dispose();
+    taskNameController.dispose();
+    super.dispose();
+  }
 
 
   @override
@@ -41,7 +51,44 @@ class _MyAppState extends State<MyApp> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(context: context,
+              builder: (_) => SimpleDialog(
+                title: Text('New task'),
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        TextField(
+                          maxLength: 50,
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          controller: taskNameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Title'
+                          ),
+                        ),
+                        SizedBox(height: 10.0,),
+                        TextField(
+                          maxLength: 300,
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          controller: taskDescriptionController,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Description'
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: (){}, child: Text('Submit'),
+                            )
+                      ],
+                    ),
+                  )
+                ],
+              ));
+        },
         child: Icon(Icons.add),
       ),
       body: SingleChildScrollView(
