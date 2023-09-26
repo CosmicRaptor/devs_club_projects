@@ -3,8 +3,9 @@ import 'tasks.dart';
 
 class TaskCard extends StatelessWidget {
   final Tasks task;
+  final Function() delete;
 
-  TaskCard ({ required this.task });
+  TaskCard ({ required this.task, required this.delete });
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,12 @@ class TaskCard extends StatelessWidget {
                       fontSize: 18.0,
                       color: Colors.grey[600]
                   )
+              ),
+              SizedBox(height: 8.0,),
+              TextButton.icon(
+                  onPressed: delete,
+                  icon: Icon(Icons.delete),
+                  label: Text('Delete'),
               )
             ],
           ),

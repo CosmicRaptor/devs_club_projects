@@ -40,9 +40,20 @@ class _MyAppState extends State<MyApp> {
         title: Text('To-do list'),
         centerTitle: true,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+      ),
       body: SingleChildScrollView(
         child: Column(
-          children: taskList.map((task) => TaskCard(task: task)).toList()
+          children: taskList.map((task) => TaskCard(
+              task: task,
+              delete: () {
+                setState(() {
+                  taskList.remove(task);
+                });
+              },
+          )).toList()
         ),
       )
     );
