@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'tasks.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'database.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   final Tasks task;
   final Function() delete;
 
   TaskCard ({ required this.task, required this.delete });
 
+  @override
+  State<TaskCard> createState() => _TaskCardState();
+}
 
+class _TaskCardState extends State<TaskCard> {
 
 
 
   @override
   Widget build(BuildContext context) {
-    final taskTitleEditController = TextEditingController(text: task.Name);
-    final taskDescriptionEditController = TextEditingController(text: task.Description);
+    final taskTitleEditController = TextEditingController(text: widget.task.Name);
+    final taskDescriptionEditController = TextEditingController(text: widget.task.Description);
     return Card(
         margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
         child:
@@ -26,7 +32,7 @@ class TaskCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                  task.Name,
+                  widget.task.Name,
                   style: TextStyle(
                       fontSize: 18.0,
                       color: Colors.grey[800]
@@ -34,7 +40,7 @@ class TaskCard extends StatelessWidget {
               ),
               SizedBox(height: 6.0,),
               Text(
-                  task.Description,
+                  widget.task.Description,
                   style: TextStyle(
                       fontSize: 18.0,
                       color: Colors.grey[600]
@@ -76,7 +82,7 @@ class TaskCard extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(height: 6.0,),
-                                    TextButton(onPressed: (){}, child: Text('Submit'))
+                                    TextButton(onPressed: () {updateData(taskTitleEditController.text);}, child: Text('Submit'))
                                   ],
                                 ),
                               )
@@ -89,7 +95,7 @@ class TaskCard extends StatelessWidget {
                   ),
                   SizedBox(width: 10.0,),
                   TextButton.icon(
-                      onPressed: delete,
+                      onPressed: () {widget.delete; deleteData(widget.task.Name);},
                       icon: Icon(Icons.delete),
                       label: Text('Delete'),
                   ),

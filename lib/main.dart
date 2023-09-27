@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'tasks.dart';
 import 'task_card.dart';
+import 'database.dart';
 
-void main() => runApp(MaterialApp(
+void main() {
+  runApp(MaterialApp(
   home: MyApp(),
-));
+));}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -81,7 +83,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ),
                         TextButton(
-                            onPressed: (){}, child: Text('Submit'),
+                            onPressed: () {addData(taskNameController.text, taskDescriptionController.text);}, child: Text('Submit'),
                             )
                       ],
                     ),
