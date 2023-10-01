@@ -89,7 +89,10 @@ class _MyAppState extends State<MyApp> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             showDialog(context: context,
-                builder: (_) => SimpleDialog(
+                builder: (_) {
+                  taskNameController.clear();
+                  taskDescriptionController.clear();
+                  return SimpleDialog(
                   title: Text('New task'),
                   children: [
                     Padding(
@@ -147,7 +150,8 @@ class _MyAppState extends State<MyApp> {
                       ),
                     )
                   ],
-                ));
+                );
+                });
           },
           child: Icon(Icons.add),
         ),
