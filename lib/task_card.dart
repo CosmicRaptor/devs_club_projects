@@ -1,3 +1,4 @@
+import 'package:devs_club_projects/database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'tasks.dart';
@@ -5,8 +6,11 @@ import 'tasks.dart';
 class TaskCard extends StatefulWidget {
   final Tasks task;
   final Function() delete;
+  final Function() edit;
+  String selectedTag = 'Not Important';
 
-  TaskCard ({ required this.task, required this.delete});
+
+  TaskCard ({ required this.task, required this.delete, required this.edit});
 
   @override
   State<TaskCard> createState() => _TaskCardState();
@@ -24,9 +28,10 @@ class _TaskCardState extends State<TaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    final taskTitleEditController = TextEditingController(text: widget.task.Name);
+    final String originalTitle = widget.task.Name;
+    final taskTitleEditController = TextEditingController(text: originalTitle);
     final taskDescriptionEditController = TextEditingController(text: widget.task.Description);
-    String? selectedTag = 'Not Important';
+
     return Card(
       shape: RoundedRectangleBorder(
         side: BorderSide(
@@ -107,8 +112,8 @@ class _TaskCardState extends State<TaskCard> {
                                       ),
                                       SizedBox(height: 6.0,),
                                       DropdownButton(
-                                        value: selectedTag,
-                                          items: ['Important', 'Not Important'].map<DropdownMenuItem<String>>((String value){
+                                        value: widget.selectedTag,
+                                          items: ['Important', 'Not Important'].map((String value){
                                             return DropdownMenuItem(
                                               value: value,
                                               child:
@@ -117,10 +122,15 @@ class _TaskCardState extends State<TaskCard> {
                                           }).toList(),
                                           onChanged: (String? newValue){
                                             setState(() {
-                                              selectedTag = newValue!;
+                                              widget.selectedTag = newValue!;
                                             });
                                           }),
-                                      TextButton(onPressed: (){}, child: Text('Submit'))
+                                      TextButton(onPressed: () async{
+                                        await deleteData(originalTitle);
+                                        await addData(Tasks(Name: taskTitleEditController.text, Description: taskDescriptionEditController.text, Tag: widget.selectedTag));
+                                        widget.edit();
+                                        Navigator.pop(context);
+                                      }, child: Text('Submit'))
                                     ],
                                   ),
                                 )
@@ -133,7 +143,19 @@ class _TaskCardState extends State<TaskCard> {
                   ),
                   SizedBox(width: 10.0,),
                   TextButton.icon(
-                    onPressed: widget.delete,
+                    onPressed: (){
+                      showDialog(context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Please confirm'),
+                            content: Text('Are you sure you want to delete this task?'),
+                            actions: [
+                              // Yes button
+                              TextButton(onPressed: (){widget.delete(); Navigator.pop(context);},
+                                  child: Text('Yes')),
+                              TextButton(onPressed: (){Navigator.pop(context);}, child: Text('No'))
+                            ],
+                          ));
+                    },
                     icon: Icon(Icons.delete),
                     label: Text('Delete'),
                   ),

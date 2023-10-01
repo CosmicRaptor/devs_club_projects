@@ -1,7 +1,8 @@
+import 'package:devs_club_projects/tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'tasks.dart';
 import 'task_card.dart';
+import 'database/database.dart';
 
 void main() => runApp(MaterialApp(
   home: MyApp(),
@@ -15,29 +16,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  List taskList = [];
+  void getInitialData() async{
+    taskList = await getEntireData();
+    setState(() {
 
-  List taskList = [
-    Tasks(Name: 'Test task 1', Description: 'This is a test task', Tag: "Not Important"),
-    Tasks(Name: 'Test task 2', Description: 'This is a test task', Tag: "Important"),
-    Tasks(Name: 'Test task 3', Description: 'This is a test task', Tag: "Important"),
-    Tasks(Name: 'Test task 4', Description: 'This is a test task', Tag: "Not Important"),
-    Tasks(Name: 'Test task 5', Description: 'This is a test task', Tag: "Important"),
-    Tasks(Name: 'Test task 6', Description: 'This is a test task', Tag: "Important"),
-    Tasks(Name: 'Test task 7', Description: 'This is a test task', Tag: "Not Important"),
-    Tasks(Name: 'Test task 8', Description: 'This is a test task', Tag: "Not Important"),
-    Tasks(Name: 'Test task 9', Description: 'This is a test task', Tag: "Important"),
-    Tasks(Name: 'Test task 10', Description: 'This is a test task', Tag: "Not Important"),
-    Tasks(Name: 'Test task 11', Description: 'This is a test task', Tag: "Important"),
-    Tasks(Name: 'Test task 12', Description: 'This is a test task', Tag: "Not Important"),
-  ];
+    });
+  }
+
   final taskNameController = TextEditingController();
   final taskDescriptionController = TextEditingController();
+  String dropDownValue = 'Not Important';
+  var values = ['Important', 'Not Important'];
 
   @override
-  void dispose() {
-    taskDescriptionController.dispose();
-    taskNameController.dispose();
-    super.dispose();
+  void initState() {
+    getInitialData();
+    super.initState();
   }
 
 
@@ -80,8 +75,32 @@ class _MyAppState extends State<MyApp> {
                                 hintText: 'Description'
                             ),
                           ),
+                          DropdownButton(
+                            value: dropDownValue,
+                            icon: Icon(Icons.arrow_downward),
+                            items: values.map((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropDownValue = newValue!;
+                              });
+                            }
+                            ),
                           TextButton(
-                            onPressed: (){}, child: Text('Submit'),
+                            onPressed: (){
+                              setState(() {
+                                //print(taskDescriptionController.text);
+                                //print(dropDownValue);
+                                addData(Tasks(Name: taskNameController.text, Description: taskDescriptionController.text, Tag: dropDownValue));
+                                getInitialData();
+                                Navigator.pop(context);
+                              });
+
+                            }, child: Text('Submit'),
                           )
                         ],
                       ),
@@ -98,6 +117,12 @@ class _MyAppState extends State<MyApp> {
                 delete: () {
                   setState(() {
                     taskList.remove(task);
+                    deleteData(task.Name);
+                  });
+                },
+                edit: () {
+                  setState(() {
+                    getInitialData();
                   });
                 },
               )).toList()
