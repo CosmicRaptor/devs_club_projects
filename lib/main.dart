@@ -20,7 +20,16 @@ class _MyAppState extends State<MyApp> {
   void getInitialData() async{
     taskList = await getEntireData();
     setState(() {
-
+    });
+  }
+  void getImp() async{
+    taskList = await getOnlyImportant();
+    setState(() {
+    });
+  }
+  void getNonImp() async{
+    taskList = await getOnlyNonImportant();
+    setState(() {
     });
   }
 
@@ -35,6 +44,13 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    taskNameController.dispose();
+    taskDescriptionController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +60,31 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.blue,
           title: Text('To-do list'),
           centerTitle: true,
+          actions: [
+            GestureDetector(
+              child: Icon(Icons.sort),
+              onTap: (){
+                showDialog(context: context,
+                    builder: (_) => SimpleDialog(
+                      title: Text('Select sort algorithm'),
+                      children: [
+                        SimpleDialogOption(
+                          child: Text("Important"),
+                          onPressed: (){getImp(); Navigator.pop(context);},
+                        ),
+                        SimpleDialogOption(
+                          child: Text("Non Important"),
+                          onPressed: (){getNonImp(); Navigator.pop(context);},
+                        ),
+                        SimpleDialogOption(
+                          child: Text("All"),
+                          onPressed: (){getInitialData(); Navigator.pop(context);},
+                        )
+                      ],
+                    ));
+              },
+            )
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
