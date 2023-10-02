@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
               onTap: (){
                 showDialog(context: context,
                     builder: (_) => SimpleDialog(
-                      title: Text('Select sort algorithm'),
+                      title: Text('Filter'),
                       children: [
                         SimpleDialogOption(
                           child: Text("Important"),
@@ -92,65 +92,78 @@ class _MyAppState extends State<MyApp> {
                 builder: (_) {
                   taskNameController.clear();
                   taskDescriptionController.clear();
-                  return SimpleDialog(
-                  title: Text('New task'),
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          TextField(
-                            maxLength: 50,
-                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                            controller: taskNameController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Title'
-                            ),
-                          ),
-                          SizedBox(height: 10.0,),
-                          TextField(
-                            maxLength: 300,
-                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                            controller: taskDescriptionController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Description'
-                            ),
-                          ),
-                          DropdownButton(
-                            value: dropDownValue,
-                            icon: Icon(Icons.arrow_downward),
-                            items: values.map((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropDownValue = newValue!;
-                              });
-                            }
-                            ),
-                          TextButton(
-                            onPressed: (){
-                              setState(() {
-                                //print(taskDescriptionController.text);
-                                //print(dropDownValue);
-                                addData(Tasks(Name: taskNameController.text, Description: taskDescriptionController.text, Tag: dropDownValue));
-                                getInitialData();
-                                Navigator.pop(context);
-                              });
+                  return StatefulBuilder(
+                    builder: (context, setState) {
+                      return SimpleDialog(
+                      title: Text('New task'),
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextField(
+                                maxLength: 50,
+                                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                                controller: taskNameController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Title'
+                                ),
+                              ),
+                              SizedBox(height: 10.0,),
+                              TextField(
+                                maxLength: 300,
+                                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                                controller: taskDescriptionController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Description'
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(width: 3.0,),
+                                  DropdownButton(
+                                    value: dropDownValue,
+                                    items: values.map((String value) {
+                                      return DropdownMenuItem(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        dropDownValue = newValue!;
+                                      });
+                                    }
+                                    ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        //print(taskDescriptionController.text);
+                                        //print(dropDownValue);
+                                        addData(Tasks(Name: taskNameController.text, Description: taskDescriptionController.text, Tag: dropDownValue, Status: false));
+                                        getInitialData();
+                                        Navigator.pop(context);
+                                      });
 
-                            }, child: Text('Submit'),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                                    }, child: Text('Submit'),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
                 );
+                    }
+                  );
                 });
           },
           child: Icon(Icons.add),
